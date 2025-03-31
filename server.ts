@@ -85,7 +85,7 @@ ${custom_domain ? `routes = ["${custom_domain}/*"]` : ""}
               },
               body: JSON.stringify({
                 type: "CNAME",
-                name: custom_domain,
+                name: subdomain,
                 content: `${name}.${accountId}.workers.dev`,
                 proxied: true,
               }),
