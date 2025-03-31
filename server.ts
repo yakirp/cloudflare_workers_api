@@ -60,8 +60,6 @@ ${custom_domain ? `routes = ["${custom_domain}/*"]` : ""}
           const accountId = Deno.env.get("CF_ACCOUNT_ID");
           const cfToken = Deno.env.get("CLOUDFLARE_API_TOKEN");
 
-          console.log(zoneId, cfToken, accountId);
-
           if (!zoneId || !cfToken || !accountId) {
             return new Response(
               "Missing CF_ZONE_ID, CF_ACCOUNT_ID, or CLOUDFLARE_API_TOKEN",
