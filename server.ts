@@ -179,5 +179,5 @@ ${custom_domain ? `routes = ["${custom_domain}/*"]` : ""}
   }
 };
 
-console.log("🚀 Server running on http://localhost:8000/");
-await serve(handler, { port: 8000 });
+console.log("Server running on http://localhost:8080/");
+await serve(handler, { port: 8080 });
