@@ -32,10 +32,52 @@ ${custom_domain ? `routes = ["${custom_domain}/*"]` : ""}
       await Deno.writeTextFile(`${folderName}/wrangler.toml`, wranglerConfig);
 
       // Dummy package.json
+      const packages = url.searchParams.get("packages");
+      const packageJson = {
+        name,
+        version: "1.0.0",
+        ...(packages
+          ? {
+              dependencies: packages.split(",").reduce((acc, pkg) => {
+                const [name, version] = pkg.split("@");
+                acc[name] = version || "latest";
+                return acc;
+              }, {}),
+            }
+          : {}),
+      };
+      console.log(JSON.stringify(packageJson, null, 2));
       await Deno.writeTextFile(
         `${folderName}/package.json`,
-        JSON.stringify({ name, version: "1.0.0" })
+        JSON.stringify(packageJson, null, 2)
       );
+      // Install dependencies if packages are specified
+      if (packages) {
+        console.log(`Installing packages: ${packages}`);
+        const npmInstallProc = Deno.run({
+          cmd: ["npm", "install"],
+          cwd: folderName,
+          stdout: "piped",
+          stderr: "piped",
+        });
+
+        const { code: installStatusCode } = await npmInstallProc.status();
+        const installOutput = await npmInstallProc.output();
+        const installError = await npmInstallProc.stderrOutput();
+
+        console.log(
+          "npm install output:",
+          new TextDecoder().decode(installOutput)
+        );
+        if (installStatusCode !== 0) {
+          console.error(
+            "npm install error:",
+            new TextDecoder().decode(installError)
+          );
+        }
+
+        npmInstallProc.close();
+      }
 
       // Run wrangler deploy
       const publishProc = Deno.run({
