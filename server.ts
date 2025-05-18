@@ -219,6 +219,9 @@ ${custom_domain ? `routes = ["${custom_domain}/*"]` : ""}
       return new Response(`Error: ${err.message}`, { status: 500 });
     }
   }
+
+  // Default response for unhandled routes/methods
+  return new Response("Not found", { status: 404 });
 };
 
 console.log("Server running on http://localhost:8080/");
