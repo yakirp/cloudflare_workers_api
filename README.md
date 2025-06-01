@@ -4,29 +4,23 @@ An API service for creating and managing Cloudflare Workers dynamically.
 
 ## Running Locally with Docker
 
-### 1. Create environment file
-
-Create a `.env` file in the root directory:
+### 1. Build the Docker image
 
 ```bash
-CLOUDFLARE_API_TOKEN=your_cloudflare_api_token_here
-CF_ACCOUNT_ID=your_cloudflare_account_id_here
-CF_ZONE_ID=your_cloudflare_zone_id_here
+docker build \
+  --build-arg CLOUDFLARE_API_TOKEN=your_cloudflare_api_token \
+  --build-arg CF_ACCOUNT_ID=your_cloudflare_account_id \
+  --build-arg CF_ZONE_ID=your_cloudflare_zone_id \
+  -t cloudflare-workers-api .
 ```
 
-### 2. Build the Docker image
+### 2. Run the container
 
 ```bash
-docker build -t cloudflare-workers-api .
+docker run -p 8000:8000 cloudflare-workers-api
 ```
 
-### 3. Run the container
-
-```bash
-docker run -p 8000:8000 --env-file .env cloudflare-workers-api
-```
-
-Replace the values in the `.env` file with your actual Cloudflare credentials from your [Cloudflare dashboard](https://dash.cloudflare.com/).
+Replace the build argument values with your actual Cloudflare credentials from your [Cloudflare dashboard](https://dash.cloudflare.com/).
 
 The API will be available at `http://localhost:8000`.
 
